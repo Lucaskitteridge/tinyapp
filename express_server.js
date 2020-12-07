@@ -22,14 +22,15 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  
-  urlDatabase[generateRandomString()] = req.body.longUrl
-  res.send("Ok");         
+  const newSmallUrl = generateRandomString()
+  urlDatabase[newSmallUrl] = req.body.longURL
+  res.redirect(`/urls/${newSmallUrl}`)        
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[shortURL] };
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[shortURL]};
+  console.log(templateVars)
   res.render("urls_show", templateVars);
 });
 
