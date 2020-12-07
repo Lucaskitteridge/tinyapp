@@ -23,6 +23,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  
+  urlDatabase[generateRandomString()] = req.body.longUrl
   res.send("Ok");         
 });
 
@@ -49,5 +50,6 @@ app.listen(PORT, () => {
 });
 
 function generateRandomString() {
-
+  let r = Math.random().toString(36).substring(7);
+  return ("random", r);
 }
