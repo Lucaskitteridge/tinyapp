@@ -34,6 +34,16 @@ app.get("/register", (req, res) => {
   res.render("urls_registration", templateVars)
 })
 
+//rendering of the login page
+app.get("/login", (req, res) => {
+  const templateVars = { user: req.cookies["user_id"]}
+  res.render("urls_login", templateVars)
+})
+
+app.post("/login", (req, res) => {
+
+})
+
 //creating a new user on the register page
 app.post("/register", (req, res) => {
   const newId = generateRandomString()
@@ -55,7 +65,6 @@ app.post("/register", (req, res) => {
   const newIdObject = {newId, email, password}
   users[newId] = newIdObject
   res.cookie("user_id", users[newId])
-  console.log(users)
   res.redirect(`/urls`)
 })
 
