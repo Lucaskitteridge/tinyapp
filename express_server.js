@@ -5,7 +5,7 @@ const app = express();
 const PORT = 8080; 
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
@@ -24,84 +24,87 @@ app.get("/urls", (req, res) => {
 
 //rendering of the page to add new urls
 app.get("/urls/new", (req, res) => {
-  const templateVars = { user: req.cookies["user_id"]}
+  const templateVars = { user: req.cookies["user_id"]};
   res.render("urls_new", templateVars);
 });
 
 //rendering of the register page
 app.get("/register", (req, res) => {
-  const templateVars = { user: req.cookies["user_id"]}
-  res.render("urls_registration", templateVars)
-})
+  const templateVars = { user: req.cookies["user_id"]};
+  res.render("urls_registration", templateVars);
+});
 
 //rendering of the login page
 app.get("/login", (req, res) => {
-  const templateVars = { user: req.cookies["user_id"]}
-  res.render("urls_login", templateVars)
-})
-
-app.post("/login", (req, res) => {
-
-})
+  const templateVars = { user: req.cookies["user_id"]};
+  res.render("urls_login", templateVars);
+});
 
 //creating a new user on the register page
 app.post("/register", (req, res) => {
-  const newId = generateRandomString()
+  const newId = generateRandomString();
   //checking if email or password is blanck
-  if(req.body["email"] === '' || req.body["password"] === ''){
-    throw new Error(404)
+  if(req.body["email"] === '' || req.body["password"] === '') {
+    throw new Error(404);
   }
   //checking if email already exists
-  if (users){
-    for(let ids in users) {
-      console.log(ids)
-      if( users[ids].email === req.body["email"]) {
-      throw new Error(404)
+  if (users) {
+    for (let ids in users) {
+      if (users[ids].email === req.body["email"]) {
+      throw new Error(404);
       }
     }
   }
-  const email = req.body["email"]
-  const password = req.body["password"]
-  const newIdObject = {newId, email, password}
-  users[newId] = newIdObject
-  res.cookie("user_id", users[newId])
-  res.redirect(`/urls`)
+  const email = req.body["email"];
+  const password = req.body["password"];
+  const newIdObject = {newId, email, password};
+  users[newId] = newIdObject;
+  res.cookie("user_id", users[newId]);
+  res.redirect(`/urls`);
 })
 
 app.post("/urls", (req, res) => {
-  const newSmallUrl = generateRandomString()
-  urlDatabase[newSmallUrl] = req.body.longURL
-  res.redirect(`/urls/${newSmallUrl}`)        
+  const newSmallUrl = generateRandomString();
+  urlDatabase[newSmallUrl] = req.body.longURL;
+  res.redirect(`/urls/${newSmallUrl}`);     
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL]
-  res.redirect(`/urls`)
-})
+  delete urlDatabase[req.params.shortURL];
+  res.redirect(`/urls`);
+});
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username)
-  res.redirect(`/urls`)
-})
+  if (users) {
+    for (let ids in users) {
+      if ((users[ids].email === req.body["email"]) && (users[ids].password === req.body["password"])) {
+        res.cookie("user_id", users[ids]);
+        res.redirect("/urls");
+      } else {
+        throw new Error(403);
+      } 
+    }
+  }
+});
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id")
-  res.redirect(`/urls`)
-})
+  res.clearCookie("user_id");
+  res.redirect(`/urls`);
+});
 
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL
-  res.redirect(`/urls`)
+  urlDatabase[req.params.shortURL] = req.body.longURL;
+  res.redirect(`/urls`);
 })
 
 app.get("/urls/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL
+  const shortURL = req.params.shortURL;
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[shortURL], user: req.cookies["user_id"],};
   res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL]
+  const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
 
@@ -118,4 +121,4 @@ app.listen(PORT, () => {
 function generateRandomString() {
   let r = Math.random().toString(36).substring(7);
   return ("random", r);
-}
+};
