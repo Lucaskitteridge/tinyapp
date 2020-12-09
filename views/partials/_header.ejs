@@ -19,9 +19,11 @@
     </div>
     <% } else { %>
     <div class="navbar-nav">
-      <form method="POST" action="/login" style="display: flex">
-        <input class="form-control" type="text" name="username" placeholder="Username" style="width: 250px; margin-right:10px">
-        <button type="submit" value="submit" class="btn btn-outline-dark">Login</button>
+      <form method="GET" action="/login" style="display: flex">
+        <button type="submit" href="/login" value="submit" class="btn btn-success">Login</button>
+      </form>
+      <form method="GET" action="/register" style="display: flex">
+        <button type="submit" href="/register" value="submit" class="btn btn-success">Register</button>
       </form>
     </div>
     <% } %>
