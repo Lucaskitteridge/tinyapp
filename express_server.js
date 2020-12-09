@@ -24,6 +24,11 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
+app.get("/register", (req, res) => {
+  const templateVars = { username: req.cookies["username"]}
+  res.render("urls_registration", templateVars)
+})
+
 app.post("/urls", (req, res) => {
   const newSmallUrl = generateRandomString()
   urlDatabase[newSmallUrl] = req.body.longURL
