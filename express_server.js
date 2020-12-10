@@ -18,8 +18,12 @@ const urlDatabase = {
 
 //rendering of the index page with all our urls
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, user: req.cookies["user_id"]};
-  res.render("urls_index", templateVars);
+  const user = req.cookies["user_id"]
+  if(user){
+    const userUrls = urlsForUser(user.newId)
+    const templateVars = { urls: userUrls, user: req.cookies["user_id"]};
+    res.render("urls_index", templateVars);
+  } else {res.redirect('/login')}
 });
 
 //rendering of the page to add new urls
@@ -63,15 +67,14 @@ app.post("/register", (req, res) => {
   const password = req.body["password"];
   const newIdObject = {newId, email, password};
   users[newId] = newIdObject;
-  console.log(users)
   res.cookie("user_id", users[newId]);
   res.redirect(`/urls`);
 })
 
 app.post("/urls", (req, res) => {
   const newSmallUrl = generateRandomString(); 
-  const userID = req.cookies["user_id"]
-  urlDatabase[newSmallUrl] = {longURL :req.body.longURL, userID}
+  const user = req.cookies["user_id"]
+  urlDatabase[newSmallUrl] = {longURL :req.body.longURL, userID :user.newId}
   res.redirect(`/urls/${newSmallUrl}`);     
 });
 
@@ -135,5 +138,11 @@ function generateRandomString() {
 };
 
 const urlsForUser = (id) => {
-  
+  let newobject = {}
+  for(let shortURL in urlDatabase) {
+    if (id === urlDatabase[shortURL].userID){
+      newobject[shortURL] = urlDatabase[shortURL]
+    }
+  }
+  return newobject
 }
