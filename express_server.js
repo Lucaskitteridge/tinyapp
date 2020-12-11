@@ -137,9 +137,9 @@ app.post("/login", (req, res) => {
   const email = req.body["email"];
   const password = req.body["password"];
   const user = getUserByEmail(email ,users);
-  if (!user) {
+  if (!user || user === "") {
     res.status(403);
-    res.send("email does not exist");
+    res.send("Username and/or password does not match");
     return;
   }
   if (!bcrypt.compareSync(password, users[user].password)) {
@@ -161,7 +161,7 @@ app.post("/register", (req, res) => {
     res.send("Email or password field is blank");
   }
   //checking if email already exists
-  for (let ids in users) {
+  for (const ids in users) {
     if (users[ids].email === req.body["email"]) {
       res.status(404);
       res.send("Account already exists for Email");
@@ -193,14 +193,14 @@ app.listen(PORT, () => {
 
 //function to make a random 6 character code
 const generateRandomString = () => {
-  let r = Math.random().toString(36).substring(7);
-  return ("random", r);
+  const r = Math.random().toString(36).substring(7);
+  return r
 };
 
 //function to check if ids match so they can only access their own urls
 const urlsForUser = (id) => {
-  let newobject = {};
-  for (let shortURL in urlDatabase) {
+  const newobject = {};
+  for (const shortURL in urlDatabase) {
     if (id === urlDatabase[shortURL].userID) {
       newobject[shortURL] = urlDatabase[shortURL];
     }
