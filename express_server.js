@@ -20,9 +20,9 @@ const users = {"userRandomID": {
   password: "purple-monkey-dinosaur"
 },
 "user2RandomID": {
-  id: "user2RandomID",
+  id: "aJ48lW",
   email: "user2@example.com",
-  password: "dishwasher-funk"
+  password: "123"
 }};
 
 const urlDatabase = {
